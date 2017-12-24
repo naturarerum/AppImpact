@@ -13,7 +13,9 @@ class MainGui:
         self.root.geometry("280x125")
         self.create_widgets()
         self.root.mainloop()
-        #TODO : Séparer en plusieurs classes
+
+        # TODO : Séparer en plusieurs classes
+
     def create_widgets(self):
         # creer un Frame principal
         self.release = tk.StringVar()
@@ -30,7 +32,7 @@ class MainGui:
         # Création du widget saisie de la release
         saisie_release = ttk.Entry(main_frame, width=15, textvariable=self.release)
         saisie_release.grid(column=2, row=0)
-        #TODO : Remplacer par une liste déroulante auto-populée
+        # TODO : Remplacer par une liste déroulante auto-populée
 
         # Création d'un widget bouton pour lancer le traitement
         btn_start = ttk.Button(btn_Frame, text="Start", command=self.traitement).grid(column=2, row=0)
@@ -42,38 +44,29 @@ class MainGui:
 
     def traite_impact(self, filename):
         fichier = filename
-        rel = self.release.get()
+        rel = self.release.get()  # récupere la saisie de l'utilisateur
         try:
             wb = openpyxl.load_workbook(fichier, data_only=True)
         except openpyxl.utils.exceptions.InvalidFileException:
-               messagebox.showerror("Erreur", "le fichier doit etre au format xlsx")
+            messagebox.showerror("Erreur", "le fichier doit etre au format xlsx")
         sheet = wb.get_sheet_by_name("Statut des services")
         maxrow = sheet.max_row
         my_range = []
         for row in sheet.iter_rows(min_row=1, max_col=25, max_row=maxrow):
             row_list = []
             for cell in row:
-                d=sheet.cell(row=row, column=25).value
-                #rel_cell = cell(row=row, column=25).internal_value
-                #if rel == rel_cell:
-                    #if cell.value != None or  'N/A':
-                print(d)
-
                 row_list.append(cell.value)
                 # print(row_list)
-            #if cell[ligne courante et colx].value == saisie_release
             my_range.append(row_list)
-            #for s in my_range:
-            #    print(*s)
-        return my_range
-
+            for s in my_range:
+                print(*s)
 
     def askopenfile(self):
         # get filename
         filename = filedialog.askopenfilename()
         # return filename
         return filename
-        #TODO : Ajouter exception si pas de fichier choisi (filename laissé vide)
+        # TODO : Ajouter exception si pas de fichier choisi (filename laissé vide)
 
     def _quit(self):
         self.root.quit()
@@ -85,5 +78,3 @@ class MainGui:
 if __name__ == '__main__':
     # Create an Application and run it
     app = MainGui()
-
-
