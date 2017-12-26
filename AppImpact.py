@@ -59,11 +59,18 @@ class MainGui:
             messagebox.showerror("Erreur", "le fichier doit etre au format xlsx")
         sheet = wb.get_sheet_by_name("Statut des services")
         maxrow = sheet.max_row
+        row_list = []
+        final_list = []
         for row_index in range(2, maxrow):
             flag_type = False
             flag_mois = False
+            flag_application = False
+            projet = ''
+            type_s = ''
+            nom_service =  ''
             mois_release = ''
-            print('Row: ' + str(row_index))
+            application = ''
+            #print('Row: ' + str(row_index))
             projet = sheet.cell(row=row_index, column=1).value
             type_s = sheet.cell(row=row_index, column=2).value
             if type_s in type_service:
@@ -73,8 +80,16 @@ class MainGui:
             if mois_release == rel:
                 flag_mois = True
             application = sheet.cell(row=row_index, column=25).value
-            if flag_mois and flag_type:
-                print(projet, type_s, nom_service,mois_release,application)
+            if application is not None:
+                flag_application = True
+            if flag_mois and flag_type and flag_application:
+                #print(projet, type_s, nom_service,mois_release,application)
+                row_list = [projet, type_s, nom_service,mois_release,application]
+                #print(row_list)
+                final_list.append(row_list)
+        return final_list
+
+
 
     def askopenfile(self):
         # get filename
