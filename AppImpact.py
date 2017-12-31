@@ -10,13 +10,7 @@ import openpyxl
 
 class MainGui:
     def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("AppImpact")
-        self.root.iconbitmap(r'C:\Python34\DLLs\pyc.ico')
-        self.root.geometry("280x125")
-        self.create_widgets()
-        #self.progress = Progressbar(self, orient=HORIZONTAL, length=100, mode='indeterminate')
-        self.root.mainloop()
+        pass
 
         # TODO : Séparer en plusieurs classes
 
@@ -43,11 +37,12 @@ class MainGui:
 
         # Création progressbar
 
-
     def traitement(self):
         # TODO : Ajouter une exception si release pas saisie
+
         nomfic = self.askopenfile()
-        self.traite_impact(nomfic)
+        liste_atraiter = self.traite_impact(nomfic)
+        self.extrait_app(liste_atraiter)
 
     def traite_impact(self, filename):
         fichier = filename
@@ -66,14 +61,14 @@ class MainGui:
             flag_mois = False
             flag_application = False
             projet = ''
-            type_s = ''
-            nom_service =  ''
+            type_service = ''
+            nom_service = ''
             mois_release = ''
             application = ''
-            #print('Row: ' + str(row_index))
+            # print('Row: ' + str(row_index))
             projet = sheet.cell(row=row_index, column=1).value
-            type_s = sheet.cell(row=row_index, column=2).value
-            if type_s in type_service:
+            type_service = sheet.cell(row=row_index, column=2).value
+            if type_service in type_service:
                 flag_type = True
             nom_service = sheet.cell(row=row_index, column=3).value
             mois_release = sheet.cell(row=row_index, column=10).value
@@ -83,13 +78,22 @@ class MainGui:
             if application is not None:
                 flag_application = True
             if flag_mois and flag_type and flag_application:
-                #print(projet, type_s, nom_service,mois_release,application)
-                row_list = [projet, type_s, nom_service,mois_release,application]
-                #print(row_list)
+                # print(projet, type_service, nom_service,mois_release,application)
+                row_list = [projet, type_service, nom_service, mois_release, application]
+                # print(row_list)
                 final_list.append(row_list)
         return final_list
 
-
+    def extrait_app(self, ma_liste):
+        liste_atraiter = ma_liste
+        for i in range(len(liste_atraiter)):
+            #print(liste_atraiter[4])
+            for j in range(len(liste_atraiter[i])):
+                print(liste_atraiter[j][4])
+        # liste_atraiter = ma_liste
+        # for element in liste_atraiter:
+        #     for item in element:
+        #         print(item[5])
 
     def askopenfile(self):
         # get filename
@@ -98,13 +102,16 @@ class MainGui:
         return filename
         # TODO : Ajouter exception si pas de fichier choisi (filename laissé vide)
 
-    def _quit(self):
-        self.root.quit()
-        self.root.destroy()
-        exit()
-
+    def app(self):
+        self.root = tk.Tk()
+        self.root.title("AppImpact")
+        self.root.iconbitmap(r'C:\Python34\DLLs\pyc.ico')
+        self.root.geometry("280x125")
+        self.create_widgets()
+        # self.progress = Progressbar(self, orient=HORIZONTAL, length=100, mode='indeterminate')
+        self.root.mainloop()
 
 # Main
 if __name__ == '__main__':
-    # Create an Application and run it
-    app = MainGui()
+    mg = MainGui()
+    mg.app()
