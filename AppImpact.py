@@ -1,3 +1,4 @@
+import re
 import tkinter as tk
 from tkinter import HORIZONTAL
 from tkinter import filedialog
@@ -47,7 +48,7 @@ class MainGui:
     def traite_impact(self, filename):
         fichier = filename
         rel = self.release.get()  # récupere la saisie de l'utilisateur
-        type_service = ['New', 'Update', 'Reuse']
+        type_s = ['New', 'Update', 'Reuse']
         try:
             wb = openpyxl.load_workbook(fichier, data_only=True)
         except openpyxl.utils.exceptions.InvalidFileException:
@@ -68,7 +69,7 @@ class MainGui:
             # print('Row: ' + str(row_index))
             projet = sheet.cell(row=row_index, column=1).value
             type_service = sheet.cell(row=row_index, column=2).value
-            if type_service in type_service:
+            if type_service in type_s:
                 flag_type = True
             nom_service = sheet.cell(row=row_index, column=3).value
             mois_release = sheet.cell(row=row_index, column=10).value
@@ -86,14 +87,11 @@ class MainGui:
 
     def extrait_app(self, ma_liste):
         liste_atraiter = ma_liste
+        i = 0
         for i in range(len(liste_atraiter)):
-            #print(liste_atraiter[4])
-            for j in range(len(liste_atraiter[i])):
-                print(liste_atraiter[j][4])
-        # liste_atraiter = ma_liste
-        # for element in liste_atraiter:
-        #     for item in element:
-        #         print(item[5])
+            print('i = :  ', i, liste_atraiter[i])
+            print(liste_atraiter[i][4])
+            print('----------------------------------------------------------------------------------------------')
 
     def askopenfile(self):
         # get filename
