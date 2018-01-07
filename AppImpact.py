@@ -1,4 +1,4 @@
-import re
+
 import tkinter as tk
 from tkinter import HORIZONTAL
 from tkinter import filedialog
@@ -85,12 +85,21 @@ class MainGui:
                 final_list.append(row_list)
         return final_list
 
-    def extrait_app(self, ma_liste):
-        liste_atraiter = ma_liste
+    def extrait_app(self, liste_atraiter):
+       # liste_atraiter = ma_liste
         i = 0
         for i in range(len(liste_atraiter)):
+            j = 0
             print('i = :  ', i, liste_atraiter[i])
-            print(liste_atraiter[i][4])
+            elem = str((liste_atraiter[i][4]))
+            chaine = elem.split(",")
+            for j in range(len(chaine)):
+                line = (str(liste_atraiter[i][0])) + ";" + (str(liste_atraiter[i][1])) + ";" \
+                       + (str(liste_atraiter[i][2])) + ";" + (str(liste_atraiter[i][3])) + ";" + str(chaine[j])
+                #print("chaine  :", chaine)
+                print("chaine j  :", chaine[j])
+                print("line :   ", line)
+                print("j : ", j)
             print('----------------------------------------------------------------------------------------------')
 
     def askopenfile(self):
@@ -100,10 +109,11 @@ class MainGui:
         return filename
         # TODO : Ajouter exception si pas de fichier choisi (filename laissé vide)
 
+
     def app(self):
         self.root = tk.Tk()
         self.root.title("AppImpact")
-        self.root.iconbitmap(r'C:\Python34\DLLs\pyc.ico')
+        #self.root.iconbitmap(r'C:\Python34\DLLs\pyc.ico')
         self.root.geometry("280x125")
         self.create_widgets()
         # self.progress = Progressbar(self, orient=HORIZONTAL, length=100, mode='indeterminate')
@@ -113,3 +123,5 @@ class MainGui:
 if __name__ == '__main__':
     mg = MainGui()
     mg.app()
+
+
