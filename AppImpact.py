@@ -1,10 +1,11 @@
-
+import datetime
 import tkinter as tk
 from tkinter import HORIZONTAL
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import ttk
 from tkinter.ttk import Progressbar
+from openpyxl import Workbook
 
 import openpyxl
 
@@ -44,6 +45,7 @@ class MainGui:
         nomfic = self.askopenfile()
         liste_atraiter = self.traite_impact(nomfic)
         self.extrait_app(liste_atraiter)
+        self.create_wb()
 
     def traite_impact(self, filename):
         fichier = filename
@@ -96,7 +98,7 @@ class MainGui:
             for j in range(len(chaine)):
                 line = (str(liste_atraiter[i][0])) + ";" + (str(liste_atraiter[i][1])) + ";" \
                        + (str(liste_atraiter[i][2])) + ";" + (str(liste_atraiter[i][3])) + ";" + str(chaine[j])
-                #print("chaine  :", chaine)
+                # print("chaine  :", chaine)
                 print("chaine j  :", chaine[j])
                 print("line :   ", line)
                 print("j : ", j)
@@ -109,11 +111,22 @@ class MainGui:
         return filename
         # TODO : Ajouter exception si pas de fichier choisi (filename laissé vide)
 
+    def create_wb(self):
+        wb_res = Workbook()
+        ws1 = wb_res.create_sheet()
+        ws1.title = "Release SOA"
+        cur_date = str(datetime.date.today())
+        dest_filename = r"c:\temp\AppImpactées.xlsx"
+        header = ['Projet', 'Type service', 'Service', 'Release', 'App. Impactée']
+        #wb_res = wb_res.worksheets[0]
+        for i in range(1, len(header) + 1):
+            ws1.cell(row=1, column=i).value = header[i - 1]
+        wb_res.save(filename=dest_filename)
 
     def app(self):
         self.root = tk.Tk()
         self.root.title("AppImpact")
-        #self.root.iconbitmap(r'C:\Python34\DLLs\pyc.ico')
+        # self.root.iconbitmap(r'C:\Python34\DLLs\pyc.ico')
         self.root.geometry("280x125")
         self.create_widgets()
         # self.progress = Progressbar(self, orient=HORIZONTAL, length=100, mode='indeterminate')
