@@ -1,6 +1,7 @@
 """
    AppImpact v 1.0
-   auteur : Olivier Lopez - Janvier 2018.
+   auteur : Olivier Lopez
+   Date : 01-2018.
 
 """
 
@@ -19,8 +20,6 @@ import openpyxl
 class MainGui:
     def __init__(self):
         pass
-
-        # TODO : Séparer en plusieurs classes
 
     def create_widgets(self):
         # creer un Frame principal
@@ -89,12 +88,13 @@ class MainGui:
             if flag_mois and flag_type and flag_application:
                 # print(projet, type_service, nom_service,mois_release,application)
                 row_list = [projet, type_service, nom_service, mois_release, application]
-                # print(row_list)
+                print(row_list)
                 final_list.append(row_list)
         return final_list
 
     def extrait_app(self, liste_atraiter):
-        liste_aecrire = []
+
+        res2= []
         i = 0
         for i in range(len(liste_atraiter)):
             j = 0
@@ -102,16 +102,21 @@ class MainGui:
             elem = str((liste_atraiter[i][4]))
             chaine = elem.split(",")
             for j in range(len(chaine)):
-                line = (str(liste_atraiter[i][0])) + "," + (str(liste_atraiter[i][1])) + "," \
-                       + (str(liste_atraiter[i][2])) + "," + (str(liste_atraiter[i][3])) + "," + str(chaine[j])
-                # print("chaine  :", chaine)
-                print("chaine j  :", chaine[j])
-                print("line :   ", line)
-                liste_aecrire.append(line)
-                print('liste a ecrire :', liste_aecrire)
-                print("j : ", j)
-            print('----------------------------------------------------------------------------------------------')
-        return liste_aecrire
+                res = []
+                # res.append((str(liste_atraiter[i][0])) + "," + (str(liste_atraiter[i][1])) + "," \
+                #     + (str(liste_atraiter[i][2])) + "," + (str(liste_atraiter[i][3])) + "," + str(chaine[j]))
+                res.append(liste_atraiter[i][0])
+                res.append(liste_atraiter[i][1])
+                res.append(liste_atraiter[i][2])
+                res.append(liste_atraiter[i][3])
+                res.append(chaine[j])
+                print("res", res)
+                res2.append(res)
+        print("res2", res2)
+        print('----------------------------------------------------------------------------------------------')
+        # return liste_aecrire
+        return res2
+
 
     def askopenfile(self):
         # get filename
@@ -120,19 +125,21 @@ class MainGui:
         return filename
         # TODO : Ajouter exception si pas de fichier choisi (filename laissé vide)
 
-    def create_wb(self, liste_sortie):
+    def create_wb(self, liste_output):
         i = 0
-        j = []
+        j = 1
+        k = 0
         wb_res = Workbook()
-        ws1 = wb_res.create_sheet()
+        ws1 = wb_res.active
         ws1.title = str(datetime.date.today())
         dest_filename = r"c:\temp\AppImpactées.xlsx"
         header = ['Projet', 'Type service', 'Service', 'Release', 'App. Impactée']
         for i in range(1, len(header) + 1):
             ws1.cell(row=1, column=i).value = header[i - 1]
-        for j in range(1, len(liste_sortie) + 1):
-            ws1.cell(row=2, column=i).value = liste_sortie[i - 1]
-        wb_res.save(filename=dest_filename)
+        for j, line in enumerate(liste_output):
+           for k, line in enumerate(line):
+                ws1.cell(row=j + 2, column=k+1).value = line
+        wb_res.save(dest_filename)
 
     def app(self):
         self.root = tk.Tk()
