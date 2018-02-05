@@ -1,7 +1,7 @@
 """
    AppImpact v 1.0
    auteur : Olivier Lopez
-   Date : 01-2018.
+   Date : 02-2018.
 
 """
 
@@ -19,6 +19,7 @@ import openpyxl
 
 class MainGui:
     def __init__(self):
+
         pass
 
     def create_widgets(self):
@@ -34,6 +35,12 @@ class MainGui:
         # Création du label Saisie de la release
         lbl_release = ttk.Label(main_frame, text="Release             : ").grid(column=0, row=0)
 
+        # Création du label Fichier input
+        lbl_ficinput = ttk.Label(main_frame, text="Input file          : ").grid(column=0, row=1)
+
+        # Création du label Fichier output
+        lbl_ficoutput = ttk.Label(main_frame, text="Output file       : ").grid(column=0, row=2)
+
         # Création du widget saisie de la release
         saisie_release = ttk.Entry(main_frame, width=15, textvariable=self.release)
         saisie_release.grid(column=2, row=0)
@@ -42,15 +49,34 @@ class MainGui:
         # Création d'un widget bouton pour lancer le traitement
         btn_start = ttk.Button(btn_Frame, text="Start", command=self.traitement).grid(column=2, row=0)
 
+        # Création d'un widget bouton pour selectionner le fichier input
+        btn_selectin = ttk.Button(btn_Frame, text="Select", command=self.openfic).grid(column=2, row=1)
+
+        # Création d'un widget bouton pour selectionner le fichier output
+        btn_selectout = ttk.Button(btn_Frame, text="Select", command=self.savefic).grid(column=2, row=2)
+
         # Création progressbar
+
+    def openfic(self):
+        try:
+            self.ficin = filedialog.askopenfilename()
+        except IOError:
+            messagebox.showerror("Erreur", "le fichier est invalide")
+        return self.ficin
+
+    def savefic(self):
+        try:
+            self.ficout= filedialog.asksaveasfilename()
+        except IOError:
+            messagebox.showerror("Erreur", "le fichier est invalide")
+        return self.ficout
 
     def traitement(self):
         # TODO : Ajouter une exception si release pas saisie
-
-        nomfic = self.askopenfile()
-        liste_atraiter = self.traite_impact(nomfic)
-        liste_output = self.extrait_app(liste_atraiter)
-        self.create_wb(liste_output)
+        
+         liste_atraiter = self.traite_impact(self.ficin)
+         liste_output = self.extrait_app(liste_atraiter)
+         self.create_wb(liste_output)
 
     def traite_impact(self, filename):
         fichier = filename
@@ -86,7 +112,6 @@ class MainGui:
             if application is not None:
                 flag_application = True
             if flag_mois and flag_type and flag_application:
-                # print(projet, type_service, nom_service,mois_release,application)
                 row_list = [projet, type_service, nom_service, mois_release, application]
                 print(row_list)
                 final_list.append(row_list)
@@ -103,8 +128,6 @@ class MainGui:
             chaine = elem.split(",")
             for j in range(len(chaine)):
                 res = []
-                # res.append((str(liste_atraiter[i][0])) + "," + (str(liste_atraiter[i][1])) + "," \
-                #     + (str(liste_atraiter[i][2])) + "," + (str(liste_atraiter[i][3])) + "," + str(chaine[j]))
                 res.append(liste_atraiter[i][0])
                 res.append(liste_atraiter[i][1])
                 res.append(liste_atraiter[i][2])
@@ -114,16 +137,7 @@ class MainGui:
                 res2.append(res)
         print("res2", res2)
         print('----------------------------------------------------------------------------------------------')
-        # return liste_aecrire
         return res2
-
-
-    def askopenfile(self):
-        # get filename
-        filename = filedialog.askopenfilename()
-        # return filename
-        return filename
-        # TODO : Ajouter exception si pas de fichier choisi (filename laissé vide)
 
     def create_wb(self, liste_output):
         i = 0
@@ -132,7 +146,7 @@ class MainGui:
         wb_res = Workbook()
         ws1 = wb_res.active
         ws1.title = str(datetime.date.today())
-        dest_filename = r"c:\temp\AppImpactées.xlsx"
+        dest_filename = self.ficout
         header = ['Projet', 'Type service', 'Service', 'Release', 'App. Impactée']
         for i in range(1, len(header) + 1):
             ws1.cell(row=1, column=i).value = header[i - 1]
